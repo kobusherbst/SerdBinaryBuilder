@@ -11,19 +11,18 @@ sources = [
 ]
 # Build script
 script = raw"""
-# Find Meson and Ninja dynamically and set PATH correctly
 meson_path=$(dirname $(which meson))
 ninja_path=$(dirname $(which ninja))
 export PATH="$meson_path:$ninja_path:$PATH"
 
 mkdir build && cd build
 
-meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} ${WORKSPACE}/srcdir
+meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} ${WORKSPACE}/srcdir/serd-0.32.4
 
 ninja -j${nproc}
 ninja install
 
-install -D -m644 ../COPYING ${prefix}/share/licenses/Serd/COPYING
+install -D -m644 ${WORKSPACE}/srcdir/serd-0.32.4/COPYING ${prefix}/share/licenses/Serd/COPYING
 """
 
 # Platforms to build for

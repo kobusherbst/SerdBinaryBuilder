@@ -51,10 +51,6 @@ find . -name '*.dll' -exec cp {} ${prefix}/bin/ \;
 
 # Install license
 install -D -m644 ${WORKSPACE}/srcdir/serd-0.32.4/COPYING ${prefix}/share/licenses/Serd/COPYING
-
-# Show installed files
-echo "=== INSTALLED FILES ==="
-find ${prefix} || true
 """
 
 platforms = [
@@ -66,7 +62,7 @@ dependencies = []
 
 products = [
     LibraryProduct(["libserd-0"], :serd),
-    FileProduct(["bin/libserd-0.dll"], :serd_dll)
+    FileProduct(["libserd-0.dll"], :serd_dll)
 ]
 
 build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies; julia_compat="1.6")

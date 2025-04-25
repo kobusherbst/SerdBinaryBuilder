@@ -15,7 +15,7 @@ jobs:
       - name: Install Julia
         uses: julia-actions/setup-julia@v2
         with:
-          version: 1.11
+          version: 1.7
 
       - name: Install BinaryBuilder
         run: |

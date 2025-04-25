@@ -37,4 +37,4 @@ dependencies = Dependency[
 ]
 
 # Build the tarballs, and possibly a `build.jl` as well.
-build_tarballs(ARGS, name, version_fake, sources, script, platforms, products, dependencies, julia_compat="1.11")
+build_tarballs(ARGS, name, version_fake, sources, script, platforms, products, dependencies, julia_compat="1.7")

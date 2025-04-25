@@ -48,6 +48,9 @@ fi
 ninja -j${nproc}
 ninja install
 
+echo "== Files installed into prefix =="
+find ${prefix}
+
 install -D -m644 ${WORKSPACE}/srcdir/serd-0.32.4/COPYING ${prefix}/share/licenses/Serd/COPYING
 """
 

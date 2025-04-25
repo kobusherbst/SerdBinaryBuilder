@@ -59,7 +59,7 @@ platforms = [
 
 # Products that will be produced
 products = [
-    LibraryProduct(["libserd-0"], :libserd)
+    LibraryProduct(["serd-0", "libserd-0"], :libserd)
 ]
 
 dependencies = []   # <- empty!

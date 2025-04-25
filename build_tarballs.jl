@@ -38,7 +38,7 @@ platforms = [
 dependencies = []
 
 products = [
-    LibraryProduct(["libserd-0"], :serd)
+    LibraryProduct(["libserd-0.so.0.32.4"], :serd)
 ]
 
 build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies;

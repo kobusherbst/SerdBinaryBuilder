@@ -15,17 +15,42 @@ meson_path=$(dirname $(which meson))
 ninja_path=$(dirname $(which ninja))
 export PATH="$meson_path:$ninja_path:$PATH"
 
+# Create build directory
 mkdir build && cd build
 
-# SIMPLE: Use the pre-supplied cross file from BinaryBuilder (MESON_TARGET_TOOLCHAIN)
-meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} ${WORKSPACE}/srcdir/serd-0.32.4
+# Detect target platform
+if [[ "${target}" == *w64-mingw32* ]]; then
+    echo "Detected Windows target, generating custom cross file..."
+
+    cat > cross_file_windows.txt <<EOF
+[binaries]
+c = '/opt/x86_64-w64-mingw32/bin/x86_64-w64-mingw32-gcc'
+cpp = '/opt/x86_64-w64-mingw32/bin/x86_64-w64-mingw32-g++'
+ar = '/opt/x86_64-w64-mingw32/bin/x86_64-w64-mingw32-ar'
+strip = '/opt/x86_64-w64-mingw32/bin/x86_64-w64-mingw32-strip'
+pkgconfig = 'pkg-config'
+
+[host_machine]
+system = 'windows'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+EOF
+
+    # Use custom cross file for Windows
+    meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=cross_file_windows.txt ${WORKSPACE}/srcdir/serd-0.32.4
+else
+    echo "Non-Windows target detected, using default MESON_TARGET_TOOLCHAIN..."
+
+    # Use default toolchain for Linux
+    meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} ${WORKSPACE}/srcdir/serd-0.32.4
+fi
 
 ninja -j${nproc}
 ninja install
 
 install -D -m644 ${WORKSPACE}/srcdir/serd-0.32.4/COPYING ${prefix}/share/licenses/Serd/COPYING
 """
-
 
 # Platforms to build for
 platforms = [

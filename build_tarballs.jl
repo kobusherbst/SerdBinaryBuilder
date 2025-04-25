@@ -59,8 +59,7 @@ platforms = [
 
 # Products that will be produced
 products = [
-    LibraryProduct(["bin/libserd-0"], :libserd_windows; platforms = [Platform("x86_64", "windows"; libc = "mingw")]),
-    LibraryProduct(["lib/libserd-0"], :libserd_linux; platforms = [Platform("x86_64", "linux"; libc = "glibc")]),
+    LibraryProduct(["lib/libserd-0", "bin/libserd-0"], :libserd)
 ]
 
 dependencies = []   # <- empty!

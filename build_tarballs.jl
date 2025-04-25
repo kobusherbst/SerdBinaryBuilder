@@ -41,10 +41,6 @@ products = [
     LibraryProduct(["libserd-0", "serd-0"], :libserd),
 ]
 
-# Dependencies: Build-time Meson and Ninja
-dependencies = [
-    BuildDependency("Meson_jll"),
-    BuildDependency("Ninja_jll"),
-]
+dependencies = []   # <- empty!
 
 build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies, julia_compat="1.7")

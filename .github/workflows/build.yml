@@ -17,7 +17,7 @@ jobs:
         run: julia build_tarballs.jl
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: serd-binaries
           path: products

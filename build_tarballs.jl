@@ -6,10 +6,9 @@ version = v"0.32.4"
 sources = [
     ArchiveSource(
         "https://download.drobilla.net/serd-0.32.4.tar.xz",
-        "553a9b50caa23a7c57732f83e6f80658"
-    ),
+        "e4b1ce4d63b1e5b0e6c0a3a5abf994d4ab0e2f2f41e59e36c0aaf66ed21a1c74"
+    )
 ]
-
 script = raw"""
 pip3 install meson ninja
 

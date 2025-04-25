@@ -47,8 +47,6 @@ install -D -m644 ${WORKSPACE}/srcdir/serd-0.32.4/COPYING ${prefix}/share/license
 platforms = [
     Platform("x86_64", "windows"; libc = "mingw"),
     Platform("x86_64", "linux"; libc = "glibc"),
-    Platform("x86_64", "macos"),
-    Platform("aarch64", "macos"),
 ]
 
 # Products that will be produced

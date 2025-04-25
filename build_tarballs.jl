@@ -23,11 +23,16 @@ meson setup --prefix=${prefix} --buildtype=release --default-library=shared ${WO
 ninja -j${nproc}
 ninja install
 
+# Install license
 install -D -m644 ${WORKSPACE}/srcdir/serd-0.32.4/COPYING ${prefix}/share/licenses/Serd/COPYING
 
-# Show installed files
-echo "=== INSTALLED FILES ==="
-find ${prefix} || true
+# Manually create missing symlinks
+cd ${prefix}/lib
+if [[ -f "libserd-0.so.0.32.4" ]]; then
+    ln -sf libserd-0.so.0.32.4 libserd-0.so.0
+    ln -sf libserd-0.so.0 libserd-0.so
+fi
+
 """
 
 platforms = [

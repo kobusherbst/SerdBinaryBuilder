@@ -59,7 +59,7 @@ platforms = [
 ]
 
 # Products that will be produced
-products = []
+products = Product[]
 
 dependencies = []   # <- empty!
 

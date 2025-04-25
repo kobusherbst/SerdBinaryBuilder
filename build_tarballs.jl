@@ -65,7 +65,8 @@ platforms = [
 dependencies = []
 
 products = [
-    LibraryProduct(["libserd-0"], :serd)
+    LibraryProduct(["libserd-0"], :serd),
+    FileProduct(["bin/libserd-0.dll"], :serd_dll)
 ]
 
 build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies; julia_compat="1.6")

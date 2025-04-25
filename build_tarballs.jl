@@ -9,29 +9,42 @@ sources = [
         "cbefb569e8db686be8c69cb3866a9538c7cb055e8f24217dd6a4471effa7d349"
     )
 ]
+# Build script
 script = raw"""
-pip3 install meson ninja
+# Make Meson and Ninja available from the JLLs
+export PATH="${Meson_jll.artifact_bin}:${Ninja_jll.artifact_bin}:$PATH"
 
+# Create and move into build directory
 mkdir build && cd build
 
+# Configure the project using Meson
 meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} ..
+
+# Compile and install
 ninja -j${nproc}
 ninja install
 
+# Install license file
 install -D -m644 ../COPYING ${prefix}/share/licenses/Serd/COPYING
 """
 
+# Platforms to build for
 platforms = [
     Platform("x86_64", "windows"; libc = "mingw"),
     Platform("x86_64", "linux"; libc = "glibc"),
     Platform("x86_64", "macos"),
-    Platform("aarch64", "macos")
+    Platform("aarch64", "macos"),
 ]
 
+# Products that will be produced
 products = [
     LibraryProduct(["libserd-0", "serd-0"], :libserd),
 ]
 
-dependencies = []
+# Dependencies: Build-time Meson and Ninja
+dependencies = [
+    BuildDependency("Meson_jll"),
+    BuildDependency("Ninja_jll"),
+]
 
 build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies, julia_compat="1.7")

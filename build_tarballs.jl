@@ -49,7 +49,7 @@ install -D -m644 ${WORKSPACE}/srcdir/serd-0.32.4/COPYING ${prefix}/share/license
 
 # >>> ADD THIS
 echo "=== INSTALLED FILES ==="
-find ${prefix}
+find ${prefix} || true
 """
 
 # Platforms to build for
@@ -64,7 +64,3 @@ products = Product[]
 dependencies = []   # <- empty!
 
 build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies, julia_compat="1.7")
-
-using BinaryBuilderBase
-println("\n=== Installed files ===\n")
-run(`find artifacts`)  # Artifacts is the local output dir

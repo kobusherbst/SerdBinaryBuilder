@@ -18,7 +18,7 @@ export PATH="$meson_path:$ninja_path:$PATH"
 
 mkdir build && cd build
 
-meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} ..
+meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} ${WORKSPACE}/srcdir
 
 ninja -j${nproc}
 ninja install

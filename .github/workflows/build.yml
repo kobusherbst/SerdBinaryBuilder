@@ -8,12 +8,23 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: ghcr.io/julialang/binarybuilder:master
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Run BinaryBuilder
+      - name: Install Julia
+        uses: julia-actions/setup-julia@v1
+        with:
+          version: 1.10
+
+      - name: Install BinaryBuilder
+        run: |
+          julia -e '
+            import Pkg;
+            Pkg.add("BinaryBuilder");
+          '
+
+      - name: Run build_tarballs.jl
         run: julia build_tarballs.jl
 
       - name: Upload Artifacts

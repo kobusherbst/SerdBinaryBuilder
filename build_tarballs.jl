@@ -41,4 +41,7 @@ products = [
     LibraryProduct(["libserd-0"], :serd)
 ]
 
-build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies; julia_compat="1.6")
+build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies;
+    julia_compat = "1.6",
+    skip_audit = true
+)

@@ -1,6 +1,6 @@
 # Note that this script can accept some limited command-line arguments, run
 # `julia build_tarballs.jl --help` to see a usage message.
-using BinaryBuilder, Pkg
+using BinaryBuilder, Pkg, BinaryBuilderBase
 
 name = "Serd"
 # <-- this is a lie, we're building v0.32.4, but we need to bump version to build for julia v1.6

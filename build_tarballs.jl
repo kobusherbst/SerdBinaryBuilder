@@ -12,7 +12,7 @@ sources = [
 # Build script
 script = raw"""
 # Make Meson and Ninja available from the JLLs
-export PATH="${Meson_jll.artifact_bin}:${Ninja_jll.artifact_bin}:$PATH"
+export PATH="$(dirname($(which meson))):$(dirname($(which ninja))):$PATH"
 
 # Create and move into build directory
 mkdir build && cd build

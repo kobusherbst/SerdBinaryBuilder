@@ -64,3 +64,7 @@ products = Product[]
 dependencies = []   # <- empty!
 
 build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies, julia_compat="1.7")
+
+using BinaryBuilderBase
+println("\n=== Installed files ===\n")
+run(`find artifacts`)  # Artifacts is the local output dir

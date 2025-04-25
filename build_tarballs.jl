@@ -15,7 +15,6 @@ meson_path=$(dirname $(which meson))
 ninja_path=$(dirname $(which ninja))
 export PATH="$meson_path:$ninja_path:$PATH"
 
-# Create build directory
 mkdir build && cd build
 
 # Detect target platform
@@ -37,12 +36,12 @@ cpu = 'x86_64'
 endian = 'little'
 EOF
 
-    # Use custom cross file for Windows
-    meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=cross_file_windows.txt ${WORKSPACE}/srcdir/serd-0.32.4
+    # Use default_library=shared for Windows
+    meson setup --prefix=${prefix} --buildtype=release --default-library=shared --cross-file=cross_file_windows.txt ${WORKSPACE}/srcdir/serd-0.32.4
 else
     echo "Non-Windows target detected, using default MESON_TARGET_TOOLCHAIN..."
 
-    # Use default toolchain for Linux
+    # Use default_library=both for Linux
     meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} ${WORKSPACE}/srcdir/serd-0.32.4
 fi
 

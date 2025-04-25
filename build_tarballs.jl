@@ -18,29 +18,20 @@ export PATH="$meson_path:$ninja_path:$PATH"
 
 mkdir build && cd build
 
-meson setup --prefix=${prefix} --buildtype=release --default-library=shared ${WORKSPACE}/srcdir/serd-0.32.4
+meson setup --prefix=${prefix} --libdir=lib --buildtype=release --default-library=shared ${WORKSPACE}/srcdir/serd-0.32.4
 
 ninja -j${nproc}
 ninja install
 
-# Fix Linux libdir confusion
-if [[ "${target}" == *linux* ]]; then
-    if [[ -d "${prefix}/lib" ]]; then
-        mkdir -p ${prefix}/lib64
-        mv ${prefix}/lib/* ${prefix}/lib64/
-        rmdir ${prefix}/lib || true
-    fi
-fi
-
-# Install license
-install -D -m644 ${WORKSPACE}/srcdir/serd-0.32.4/COPYING ${prefix}/share/licenses/Serd/COPYING
-
-# Create symlinks manually
-cd ${prefix}/lib64 || cd ${prefix}/lib
+# Symlinks (if not created automatically)
+cd ${prefix}/lib
 if [[ -f "libserd-0.so.0.32.4" ]]; then
     ln -sf libserd-0.so.0.32.4 libserd-0.so.0
     ln -sf libserd-0.so.0 libserd-0.so
 fi
+
+# Install license
+install -D -m644 ${WORKSPACE}/srcdir/serd-0.32.4/COPYING ${prefix}/share/licenses/Serd/COPYING
 
 """
 

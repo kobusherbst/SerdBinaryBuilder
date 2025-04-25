@@ -1,15 +1,13 @@
-using BinaryBuilder, BinaryBuilderBase, Pkg
+using BinaryBuilder, BinaryBuilderBase
 
 name = "Serd"
 version = v"0.32.4"
 
 sources = [
-    ArchiveSource(
-        "https://download.drobilla.net/serd-0.32.4.tar.xz",
-        "cbefb569e8db686be8c69cb3866a9538c7cb055e8f24217dd6a4471effa7d349"
-    )
+    ArchiveSource("https://download.drobilla.net/serd-0.32.4.tar.xz",
+                  "cbefb569e8db686be8c69cb3866a9538c7cb055e8f24217dd6a4471effa7d349")
 ]
-# Build script
+
 script = raw"""
 meson_path=$(dirname $(which meson))
 ninja_path=$(dirname $(which ninja))
@@ -43,24 +41,29 @@ else
 fi
 
 ninja -j${nproc}
-ninja install
 
+# Manually copy built libraries
+mkdir -p ${prefix}/lib
+mkdir -p ${prefix}/bin
+
+find . -name '*.so*' -exec cp {} ${prefix}/lib/ \;
+find . -name '*.dll' -exec cp {} ${prefix}/bin/ \;
+
+# Install license
 install -D -m644 ${WORKSPACE}/srcdir/serd-0.32.4/COPYING ${prefix}/share/licenses/Serd/COPYING
 
-# >>> ADD THIS
+# Show installed files
 echo "=== INSTALLED FILES ==="
 find ${prefix} || true
 """
 
-# Platforms to build for
 platforms = [
-    Platform("x86_64", "windows"; libc = "mingw"),
-    Platform("x86_64", "linux"; libc = "glibc"),
+    Platform("x86_64", "linux"; libc="glibc"),
+    Platform("x86_64", "windows"; libc="mingw")
 ]
 
-# Products that will be produced
-products = Product[]
+dependencies = []
 
-dependencies = []   # <- empty!
+products = Product[]  # temporarily empty to allow inspecting installed files
 
-build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies, julia_compat="1.7")
+build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies; julia_compat="1.6")

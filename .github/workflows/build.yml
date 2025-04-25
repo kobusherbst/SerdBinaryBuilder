@@ -1,0 +1,23 @@
+name: Build Serd
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ghcr.io/julialang/binarybuilder:master
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run BinaryBuilder
+        run: julia build_tarballs.jl
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: serd-binaries
+          path: products

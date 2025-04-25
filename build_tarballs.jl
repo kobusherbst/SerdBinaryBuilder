@@ -17,7 +17,7 @@ export PATH="$meson_path:$ninja_path:$PATH"
 
 mkdir build && cd build
 
-meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} ${WORKSPACE}/srcdir/serd-0.32.4
+meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} -Dc_link_args=[] ${WORKSPACE}/srcdir/serd-0.32.4
 
 ninja -j${nproc}
 ninja install

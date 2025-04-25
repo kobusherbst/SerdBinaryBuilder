@@ -59,10 +59,7 @@ platforms = [
 ]
 
 # Products that will be produced
-products = [
-    FileProduct(["libserd-0.dll"], :libserd_dll),
-    FileProduct(["libserd-0.so"], :libserd_so)
-]
+products = []
 
 dependencies = []   # <- empty!
 

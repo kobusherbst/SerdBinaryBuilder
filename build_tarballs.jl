@@ -1,40 +1,38 @@
-# Note that this script can accept some limited command-line arguments, run
-# `julia build_tarballs.jl --help` to see a usage message.
-using BinaryBuilder, Pkg, BinaryBuilderBase
+using BinaryBuilder, BinaryBuilderBase, Pkg
 
 name = "Serd"
-# <-- this is a lie, we're building v0.32.4, but we need to bump version to build for julia v1.6
-version_fake = v"0.32.5"
 version = v"0.32.4"
 
-# Collection of sources required to complete build
 sources = [
-    ArchiveSource("http://download.drobilla.net/serd-$(version).tar.bz2", "affa80deec78921f86335e6fc3f18b80aefecf424f6a5755e9f2fa0eb0710edf")
+    ArchiveSource(
+        "https://download.drobilla.net/serd-0.32.4.tar.xz",
+        "553a9b50caa23a7c57732f83e6f80658"
+    ),
 ]
 
-# Bash recipe for building across all platforms
 script = raw"""
-cd $WORKSPACE/srcdir/serd*/
+pip3 install meson ninja
 
-install_license COPYING
-./waf configure --prefix=$prefix
-./waf
-./waf install
-exit
+mkdir build && cd build
+
+meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} ..
+ninja -j${nproc}
+ninja install
+
+install -D -m644 ../COPYING ${prefix}/share/licenses/Serd/COPYING
 """
 
-# These are the platforms we will build for by default, unless further
-# platforms are passed in on the command line
-platforms = supported_platforms(; experimental=true)
+platforms = [
+    Platform("x86_64", "windows"; libc = "mingw"),
+    Platform("x86_64", "linux"; libc = "glibc"),
+    Platform("x86_64", "macos"),
+    Platform("aarch64", "macos")
+]
 
-# The products that we will ensure are always built
 products = [
-    LibraryProduct(["libserd-0", "serd"], :libserd)
+    LibraryProduct(["libserd-0", "serd-0"], :libserd),
 ]
 
-# Dependencies that must be installed before this package can be built
-dependencies = Dependency[
-]
+dependencies = []
 
-# Build the tarballs, and possibly a `build.jl` as well.
-build_tarballs(ARGS, name, version_fake, sources, script, platforms, products, dependencies, julia_compat="1.7")
+build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies)

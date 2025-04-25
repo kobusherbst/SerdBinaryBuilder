@@ -17,7 +17,24 @@ export PATH="$meson_path:$ninja_path:$PATH"
 
 mkdir build && cd build
 
-meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} -Dc_link_args=[] ${WORKSPACE}/srcdir/serd-0.32.4
+# Create a custom cross file for Apple ARM builds
+cat > cross_file.txt <<EOF
+[binaries]
+c = '/opt/bin/aarch64-apple-darwin20-clang'
+cpp = '/opt/bin/aarch64-apple-darwin20-clang++'
+ar = '/opt/bin/aarch64-apple-darwin20-ar'
+strip = '/opt/bin/aarch64-apple-darwin20-strip'
+pkgconfig = 'pkg-config'
+
+[host_machine]
+system = 'darwin'
+cpu_family = 'aarch64'
+cpu = 'arm64'
+endian = 'little'
+EOF
+
+# Now use the custom cross file
+meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=cross_file.txt ${WORKSPACE}/srcdir/serd-0.32.4
 
 ninja -j${nproc}
 ninja install

@@ -1,4 +1,5 @@
-using BinaryBuilder
+# Import symbols for cleaner use
+using BinaryBuilder: ArchiveSource, Platform, LibraryProduct, build_tarballs
 
 name = "Serd"
 version = v"0.32.4"

@@ -11,20 +11,18 @@ sources = [
 ]
 # Build script
 script = raw"""
-# Make Meson and Ninja available from the JLLs
-export PATH="$(dirname($(which meson))):$(dirname($(which ninja))):$PATH"
+# Find Meson and Ninja dynamically and set PATH correctly
+meson_path=$(dirname $(which meson))
+ninja_path=$(dirname $(which ninja))
+export PATH="$meson_path:$ninja_path:$PATH"
 
-# Create and move into build directory
 mkdir build && cd build
 
-# Configure the project using Meson
 meson setup --prefix=${prefix} --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} ..
 
-# Compile and install
 ninja -j${nproc}
 ninja install
 
-# Install license file
 install -D -m644 ../COPYING ${prefix}/share/licenses/Serd/COPYING
 """
 

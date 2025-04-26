@@ -44,7 +44,16 @@ fi
 ninja -j${nproc}
 ninja install
 
+# License file
 install -D -m644 ${WORKSPACE}/srcdir/serd-0.32.4/COPYING ${prefix}/share/licenses/Serd/COPYING
+
+# Symlink the file for BinaryBuilder lookup
+if [[ "${target}" == *linux* ]]; then
+    ln -s libserd-0.so ${prefix}/lib/libserd-0
+fi
+if [[ "${target}" == *w64-mingw32* ]]; then
+    ln -s libserd-0.dll ${prefix}/bin/libserd-0
+fi
 """
 
 # Products

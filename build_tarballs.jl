@@ -58,8 +58,8 @@ fi
 
 # Products
 products = [
-    LibraryProduct(["lib/libserd-0"], :libserd; dont_dlopen=true),
-    LibraryProduct(["bin/libserd-0"], :libserd; dont_dlopen=true),
+    LibraryProduct(["libserd-0"], :libserd; dont_dlopen=true),
+    LibraryProduct(["libserd-0"], :libserd; dont_dlopen=true),
 ]
 
 # Supported platforms

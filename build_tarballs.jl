@@ -1,72 +1,51 @@
-using BinaryBuilder, BinaryBuilderBase
+# Note that this script can accept some limited command-line arguments, run
+# `julia build_tarballs.jl --help` to see a usage message.
+using BinaryBuilder, Pkg
 
 name = "Serd"
-version = v"0.32.4"
+version = v"0.30.10"
 
+# Collection of sources required to complete build
 sources = [
-    ArchiveSource("https://download.drobilla.net/serd-0.32.4.tar.xz",
-                  "cbefb569e8db686be8c69cb3866a9538c7cb055e8f24217dd6a4471effa7d349"),
+    ArchiveSource("http://download.drobilla.net/serd-0.30.10.tar.bz2", "affa80deec78921f86335e6fc3f18b80aefecf424f6a5755e9f2fa0eb0710edf")
 ]
 
-# The actual build script
+# Bash recipe for building across all platforms
 script = raw"""
-meson_path=$(dirname $(which meson))
-ninja_path=$(dirname $(which ninja))
-export PATH="$meson_path:$ninja_path:$PATH"
-
-mkdir build && cd build
-
-if [[ "${target}" == *w64-mingw32* ]]; then
-    echo "Detected Windows target, generating custom cross file..."
-
-    cat > cross_file_windows.txt <<EOF
-[binaries]
-c = '/opt/x86_64-w64-mingw32/bin/x86_64-w64-mingw32-gcc'
-cpp = '/opt/x86_64-w64-mingw32/bin/x86_64-w64-mingw32-g++'
-ar = '/opt/x86_64-w64-mingw32/bin/x86_64-w64-mingw32-ar'
-strip = '/opt/x86_64-w64-mingw32/bin/x86_64-w64-mingw32-strip'
-pkgconfig = 'pkg-config'
-
-[host_machine]
-system = 'windows'
-cpu_family = 'x86_64'
-cpu = 'x86_64'
-endian = 'little'
-EOF
-
-    meson setup --prefix=${prefix} --libdir=lib --buildtype=release --default-library=shared --cross-file=cross_file_windows.txt ${WORKSPACE}/srcdir/serd-0.32.4
-else
-    echo "Non-Windows target detected, using default MESON_TARGET_TOOLCHAIN..."
-
-    meson setup --prefix=${prefix} --libdir=lib --buildtype=release --default-library=both --cross-file=${MESON_TARGET_TOOLCHAIN} ${WORKSPACE}/srcdir/serd-0.32.4
-fi
-
-ninja -j${nproc}
-ninja install
-
-install -D -m644 ${WORKSPACE}/srcdir/serd-0.32.4/COPYING ${prefix}/share/licenses/Serd/COPYING
-
-echo "=== Installed files ==="
-find ${prefix}
+cd $WORKSPACE/srcdir
+cd serd-0.30.10/
+install_license COPYING
+./waf configure --prefix=$prefix
+./waf
+./waf install
+exit
 """
 
-# Products
-products = [
-    LibraryProduct(["libserd-0"], :libserd; dont_dlopen=true),
-    LibraryProduct(["libserd-0"], :libserd; dont_dlopen=true),
-]
-
-# Supported platforms
+# These are the platforms we will build for by default, unless further
+# platforms are passed in on the command line
 platforms = [
-    Platform("x86_64", "linux"; libc="glibc"),
-    Platform("x86_64", "windows"; libc="mingw"),
+    Platform("i686", "linux"; libc = "glibc"),
+    Platform("x86_64", "linux"; libc = "glibc"),
+    Platform("aarch64", "linux"; libc = "glibc"),
+    Platform("armv7l", "linux"; call_abi = "eabihf", libc = "glibc"),
+    Platform("powerpc64le", "linux"; libc = "glibc"),
+    Platform("i686", "linux"; libc = "musl"),
+    Platform("x86_64", "linux"; libc = "musl"),
+    Platform("aarch64", "linux"; libc = "musl"),
+    Platform("armv7l", "linux"; call_abi = "eabihf", libc = "musl"),
+    Platform("x86_64", "macos"; ),
+    Platform("x86_64", "freebsd"; )
 ]
 
-# No dependencies
-dependencies = []
 
-# Actually build
-build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies;
-    julia_compat = "1.6",
-    skip_audit = true,
-)
+# The products that we will ensure are always built
+products = [
+    LibraryProduct("libserd-0", :libserd)
+]
+
+# Dependencies that must be installed before this package can be built
+dependencies = Dependency[
+]
+
+# Build the tarballs, and possibly a `build.jl` as well.
+build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies)

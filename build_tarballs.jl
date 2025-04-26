@@ -5,7 +5,7 @@ version = v"0.32.4"
 
 sources = [
     ArchiveSource("https://download.drobilla.net/serd-0.32.4.tar.xz",
-                  "f51e2d7defe0979abff04e024f75d75d1ef18da9cc9813dbfd5deb8701b8cf7f"),
+                  "cbefb569e8db686be8c69cb3866a9538c7cb055e8f24217dd6a4471effa7d349"),
 ]
 
 # The actual build script
